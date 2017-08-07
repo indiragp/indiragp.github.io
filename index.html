@@ -26,8 +26,8 @@
                 sectionsColor: ['#ffffff', '#ffffff', '#f2f2f2', '#ffffff', '#f2f2f2', '#ffffff', '#f2f2f2'],
                 navigation: true,
                 navigationPosition: 'right',
-                navigationTooltips: ['Intro', 'Overview', 'Airlines on Time Performance', 'Complaints', 'Religion', 'About', 'Resources'],
-                anchors:['Intro', 'Overview', 'Airlines On Time Performance', 'Complaints', 'Religion', 'About', 'Author']
+                navigationTooltips: ['Intro', 'Overview', 'Airlines on Time Performance', 'Complaints', 'About', 'Resources'],
+                anchors:['Intro', 'Overview', 'Airlines On Time Performance', 'Complaints', 'About', 'Author']
             });
         });
     </script>
@@ -52,6 +52,25 @@
             border-radius: 8px;
             pointer-events: none;
         }
+        .tooltipPie {                                                        /* NEW */
+            background: #eee;                                               /* NEW */
+            box-shadow: 0 0 5px #999999;                                    /* NEW */
+            color: #333;                                                    /* NEW */
+            display: none;                                                  /* NEW */
+            font-size: 12px;                                                /* NEW */
+            left: 130px;                                                    /* NEW */
+            padding: 10px;                                                  /* NEW */
+            position: absolute;                                             /* NEW */
+            text-align: center;                                             /* NEW */
+            top: 95px;                                                      /* NEW */
+            width: 80px;                                                    /* NEW */
+            z-index: 10;                                                    /* NEW */
+        }                                                                 /* NEW */
+        .legend {
+            font-size: 12px;
+        }
+
+
     </style>
 
 </head>
@@ -63,19 +82,16 @@
         <h1>U.S. Airlines On-Time Performance</h1>
         <p>Data to help you decide which carrier to use for your next trip</p>
     </div>
+    <div class="section" id="overview-a">
+        <h1> Flight Delay Impacting : (Insert your name here)</h1>
+        Have you ever got one of those annoying emails? <br>
+        Do you wonder if only I had bought the ticket with x or y airline I wouldn't be stuck here? <br>
+        Do you dread those rescheduling lines in the middle of the airport? <br>
+        We've all been there!. Here is some information from the FAA for the last 3 available months for you to explore how you could avoid that.<br>
+        Also, will there be any problems during your flight: Will your suitcase make it to your destination with you or at all?<br>
+        They also collect some information on how many complaints each airline gets.<br>
+    </div>
     <div class="section" id="section1">
-        <!--<div class="slide" id="slide1">-->
-            <!--<div class="intro">-->
-                <!--<h1>Around the world scrolling</h1>-->
-                <!--<p>Go to the first section and scroll up or to the last one and scroll down to see how it works.</p>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="slide active" id="slide2">-->
-            <!--<h1>Slide 2</h1>-->
-        <!--</div>-->
-        <!--<div class="slide" id="slide3">-->
-            <!--<h1>Slide 3</h1>-->
-        <!--</div>-->
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -85,14 +101,31 @@
             </div>
             <div class="row">
                 <div class="col">
-
+                    <h3>Will your airplane leave on time?</h3>
+                    To the right there is a visualization of the percentage of time that each of the major U.S. Airlines is on time. <br>
+                    On hover you can see the actual percentage in a tooltip. <br>
+                    On Click on one of the bars you can see on the right a graph indicating the percentage for each reason that airline is late. <br>
                 </div>
-                <div class="col-10" id="on-time-performance">
+                <div class="col-6" id="on-time-performance">
 
                     <div class="btn-group" role="group" aria-label="Month Selector">
                         <button type="button" class="btn btn-info" data-selection="Apr-17" onClick="changeSelection(this)">April</button>
                         <button type="button" class="btn btn-warning" data-selection="May-17" onClick="changeSelection(this)">May</button>
                         <button type="button" class="btn btn-warning" data-selection="Jun-17" onClick="changeSelection(this)">June</button>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card">
+                        <div class="card-block">
+                            <h3>Reason for delay</h3>
+                            <div id="reason-pie">
+                                Click on a bar to see something!
+                            </div>
+                            <b> Airline: </b> <br/>
+                            <span id="pie-selected-airline"></span>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,9 +134,17 @@
 
     </div>
     <div class="section" id="section2">
-        <div class="intro">
-            <h1>Scroll Down</h1>
-            <p>And it will animate down to the first section</p>
+        <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Airline Complaints</h1>
+                <!--<p>And it will animate down to the first section</p>-->
+            </div>
+            <div class="col" id="complaints-graph">
+
+            </div>
+
+        </div>
         </div>
     </div>
     <div class="section" id="section3">
@@ -120,6 +161,7 @@
                     This project was created using the hybrid visualization structure of interactive slideshow.
                     Guidance is provided on each slide. Users can investigate further on each slide or continue to the following one.
                     <h3> Scenes</h3>
+
                     <h3> Annotations</h3>
                 </div>
 
@@ -129,7 +171,8 @@
                     There is an intuitive side bar which allows users to navigate between the different slides. Each slide is represented by a circle. And there is a slightly bigger circle representing the current slide.
                     On hover on each circle there is a tooltip with the name of each slide. Users can navigate either scrolling up and down or by clicking on one of this circles.
                     <h3> Triggers </h3>
-                    In the on time performance graph there is an on hover event that triggers a tooltip with the actual value of on time performance
+                    In the on time performance graph there is an on hover event that triggers a tooltip with the actual value of on time performance.
+                    On Click of a bar, a pie chart is displayed on the right displaying the reasons for delay on that airline.
                 </div>
             </div>
         </div>
@@ -162,7 +205,7 @@
 <script>
 
     var margin = {top: 20, right: 20, bottom: 150, left: 40},
-        width = 800 - margin.left - margin.right,
+        width = 500 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     // Parse the date / time
@@ -171,6 +214,7 @@
     var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
     var y = d3.scale.linear().range([height, 0]);
+
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -191,7 +235,9 @@
             "translate(" + margin.left + "," + margin.top + ")");
     var selectedDate = "Apr-17";
     var axisExist = false;
+    var pieExist  = false;
     bars(selectedDate);
+
 
     // Define the div for the tooltip
     var div = d3.select("body").append("div")
@@ -199,6 +245,8 @@
         .style("opacity", 0);
 
     function changeSelection(theButton) {
+        $('#reason-pie').html("Click on a bar to see something! ");
+        $('#pie-selected-airline').html("");
         $('.btn-info').addClass('btn-warning');
         $('.btn-info').removeClass('btn-info');
         $(theButton).removeClass('btn-warning');
@@ -292,7 +340,7 @@
                 div.transition()
                     .duration(200)
                     .style("opacity", .9);
-                div	.html( "On time percentage: <br>"+ d.value +"%")
+                div	.html( "On time percentage: <br>"+ Math.round(d.value*100)/100 +"%")
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })
@@ -300,9 +348,150 @@
                     div.transition()
                         .duration(500)
                         .style("opacity", 0);
-                });
+                })
+            .on("click", function(d) {createPieChart(d)});
 
         });
+
+
+    }
+
+    function arcTween(a) {
+        var i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return function(t) {
+            return arc(i(t));
+        };
+    }
+
+    var pie;
+    var path;
+    //https://bl.ocks.org/mbostock/1346410
+    function createPieChart(data) {
+        console.log(data);
+
+        $('#pie-selected-airline').text(data["CARRIER"]);
+//        var labels = ["AIR CARRIER DELAY", "CANCELLED", "DIVERTED", "EXTREME WEATHER DELAY",
+//            "LATE ARRIVING AIRCRAFT DELAY", "NATIONAL AVIATION SYSTEM DELAY"];
+//        var dataToDisplay = [,
+//        , , ];
+
+        var sum = parseInt(data["AIR CARRIER DELAY"]) +
+            parseInt(data["CANCELLED"]) +
+            parseInt(data["DIVERTED"]) +
+            parseInt(data["EXTREME WEATHER DELAY"]) +
+            parseInt(data["LATE ARRIVING AIRCRAFT DELAY"]) +
+            parseInt(data["NATIONAL AVIATION SYSTEM DELAY"]);
+
+        var newData = [
+            {"label": "AIR CARRIER", "value": 1.0 * parseInt(data["AIR CARRIER DELAY"])/sum, "count": parseInt(data["AIR CARRIER DELAY"])  },
+            {"label": "CANCELLED", "value":  1.0 * parseInt(data["CANCELLED"])/sum, "count": parseInt(data["CANCELLED"])},
+            {"label": "DIVERTED", "value":  1.0 * parseInt(data["DIVERTED"])/ sum, "count": parseInt(data["DIVERTED"])},
+            {"label": "EXTREME WEATHER", "value": 1.0 * parseInt(data["EXTREME WEATHER DELAY"])/ sum, "count": parseInt(data["EXTREME WEATHER DELAY"])},
+            {"label": "LATE AIRCRAFT", "value": 1.0 * parseInt(data["LATE ARRIVING AIRCRAFT DELAY"])/ sum, "count": parseInt(data["LATE ARRIVING AIRCRAFT DELAY"])},
+            {"label": "NATIONAL AVIATION", "value": 1.0 * parseInt(data["NATIONAL AVIATION SYSTEM DELAY"]) / sum, "count":parseInt(data["NATIONAL AVIATION SYSTEM DELAY"]) }
+        ];
+
+        var w = 300;
+        var h = 300;
+        var r = h/2;
+        var color = d3.scale.category20();
+        $('#reason-pie').html("");
+        var tooltipPie = d3.select('#reason-pie')                               // NEW
+            .append('div')                                                // NEW
+            .attr('class', 'tooltipPie');
+
+        tooltipPie.append('div')                                           // NEW
+            .attr('class', 'label');                                      // NEW
+
+        tooltipPie.append('div')                                           // NEW
+            .attr('class', 'count');                                      // NEW
+
+        tooltipPie.append('div')                                           // NEW
+            .attr('class', 'percent');
+
+//        if(!pieExist) {
+            var vis = d3.select('#reason-pie').append("svg:svg")
+                .data([newData])
+                .attr("width", w)
+                .attr("height", h)
+                .append("svg:g")
+                .attr("transform", "translate(" + r + "," + r + ")")
+                .each(function(d) { this._current = d; });
+            pie = d3.layout.pie().value(function(d){return d.value;});
+
+            // Declare an arc generator function
+            var arc = d3.svg.arc().outerRadius(r).innerRadius(r-50);
+
+            // Select paths, use arc generator to draw
+            var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+            path = arcs.append("svg:path")
+                .attr("fill", function(d, i){return color(i);})
+                .attr("d", function (d) {return arc(d);})
+            ;
+            //https://bl.ocks.org/cflavs/ff1c6005fd7edad32641
+            path.on('mouseover', function(d) {                            // NEW
+//                var total = d3.sum(dataset.map(function(d) {                // NEW
+//                    return d.count;                                           // NEW
+//                }));                                                        // NEW
+//                var percent = Math.round(1000 * d.data.count / total) / 10; // NEW
+                tooltipPie.select('.label').html(d.data.label);                // NEW
+                tooltipPie.select('.count').html(d.data.count);                // NEW
+                tooltipPie.select('.percent').html(Math.round(d.data.value * 10000)/100 + '%');             // NEW
+                tooltipPie.style('display', 'block');                          // NEW
+                console.log("bla");
+            });                                                           // NEW
+
+            path.on('mouseout', function() {                              // NEW
+                tooltipPie.style('display', 'none');                           // NEW
+            });
+
+            // Add the text
+            arcs.append("svg:text")
+                .attr("transform", function(d){
+                    d.innerRadius = 50; /* Distance of label to the center*/
+                    d.outerRadius = r;
+                    return "translate(" + arc.centroid(d) + ")";}
+                )
+//                .attr("text-anchor", "middle")
+//                .text( function(d, i) {return Math.round(newData[i].value * 10000)/100 + '%';})
+            ;
+            pieExist = true;
+        var legendRectSize = 18;
+        var legendSpacing = 4;
+        var legend = vis.selectAll('.legend')
+            .data(color.domain())
+            .enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+                var height = legendRectSize + legendSpacing;
+                var offset =  height * color.domain().length / 2;
+                var horz = -3 * legendRectSize;
+                var vert = i * height - offset;
+                return 'translate(' + horz + ',' + vert + ')';
+            });
+
+        legend.append('rect')
+            .attr('width', legendRectSize)
+            .attr('height', legendRectSize)
+            .style('fill', color)
+            .style('stroke', color);
+
+        legend.append('text')
+            .attr('x', legendRectSize + legendSpacing)
+            .attr('y', legendRectSize - legendSpacing)
+            .text(function(d, i) { return newData[i].label; });
+
+//        } else {
+//
+//            pie = d3.layout.pie().value(function(d, i){return newData[i].value;});// change the value function
+//            path = path.data(pie); // compute the new angles
+//            path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+//
+//        }
+
+
 
 
     }
