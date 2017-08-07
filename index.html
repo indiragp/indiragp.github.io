@@ -32,6 +32,17 @@
         });
     </script>
     <style>
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
         #section0{
             background-image: url("imgs/airplane.jpeg");
             height: 100%;
@@ -161,8 +172,11 @@
                     This project was created using the hybrid visualization structure of interactive slideshow.
                     Guidance is provided on each slide. Users can investigate further on each slide or continue to the following one.
                     <h3> Scenes</h3>
+                    This project was created as slides using FullPage.js library. The first scene has two charts related to each other. Related to the percentage of on time flights for the U.S airlines and the reasons why they are late.
 
                     <h3> Annotations</h3>
+                    The bar graph has labels on the axis and the pie chart has labels in the middle indicating what each color represents.
+                    Other annotations indicate what data is available to explore.
                 </div>
 
                 <div class="col">
@@ -272,6 +286,18 @@
             y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
             var vis = d3.select("#barchart");
+            var padding = 5;
+            // now add titles to the axes
+            vis.append("text")
+                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ -25 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+                .text("On Time Percentage");
+
+            vis.append("text")
+                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ (width/2) +","+(height+100)+")")  // centre below axis
+                .text("Airline");
+
 
             //a good written tutorial of d3 selections coming from protovis
             //http://www.jeromecukier.net/blog/2011/08/09/d3-adding-stuff-and-oh-understanding-selections/
@@ -352,6 +378,7 @@
             .on("click", function(d) {createPieChart(d)});
 
         });
+
 
 
     }
